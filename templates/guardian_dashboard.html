@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Guardian Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvDPHJ58XzmGIB-DMOfSOvbtnyhOMI1vTXrw&s') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        #map {
+            width: 100%;
+            height: 400px;
+            margin-top: 10px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .logout-btn, .maps-btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #dc3545;
+        }
+        .logout-btn:hover {
+            background: #c82333;
+        }
+        .maps-btn:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <button class="logout-btn" onclick="window.location.href='/logout'">Logout</button>
+
+    <div class="container mt-4">
+        <h2>Welcome, Guardian</h2>
+        <p>Tracking User: <b>{{ user_name }}</b></p>
+        <p>Last Known Location: <span id="location">Latitude: {{ user_lat }}, Longitude: {{ user_lng }}</span></p>
+        
+        <button class="maps-btn" onclick="redirectToGoogleMaps()">View in Google Maps</button>
+
+        <div id="map"></div>
+    </div>
+
+    <script>
+        var lat = {{ user_lat }};
+        var lng = {{ user_lng }};
+        var map = L.map('map').setView([lat, lng], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        L.marker([lat, lng]).addTo(map).bindPopup("User's Last Location").openPopup();
+
+        function redirectToGoogleMaps() {
+            window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
+        }
+    </script>
+</body>
+
+</html>
